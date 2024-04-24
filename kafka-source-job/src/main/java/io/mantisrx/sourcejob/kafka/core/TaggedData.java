@@ -28,7 +28,7 @@ import io.mantisrx.runtime.codec.JsonType;
 
 public class TaggedData implements JsonType {
 
-    private final Set<String> matchedClients = new HashSet<String>();
+    private final Set<String> matchedClients = new HashSet<>();
     private Map<String, Object> payLoad;
 
     @JsonCreator

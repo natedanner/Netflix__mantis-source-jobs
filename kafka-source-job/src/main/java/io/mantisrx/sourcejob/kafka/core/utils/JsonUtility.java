@@ -24,7 +24,7 @@ import com.fasterxml.jackson.databind.ObjectReader;
 import com.fasterxml.jackson.databind.ObjectWriter;
 
 
-public class JsonUtility {
+public final class JsonUtility {
 
     private static final JsonUtility INSTANCE = new JsonUtility();
 

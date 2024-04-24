@@ -25,6 +25,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectReader;
 import com.mantisrx.common.utils.MantisSourceJobConstants;
 import io.mantisrx.common.codec.Codecs;
+import io.mantisrx.publish.netty.proto.MantisEvent;
 import io.mantisrx.publish.netty.proto.MantisEventEnvelope;
 import io.mantisrx.runtime.Context;
 import io.mantisrx.runtime.ScalarToScalar;
@@ -71,12 +72,12 @@ public class EchoStage implements ScalarComputation<String, String> {
         return events
             .buffer(bufferDuration, TimeUnit.MILLISECONDS)
             .flatMapIterable(i -> i)
-            .filter((event) -> !event.isEmpty())
-            .flatMap((envelopeStr) -> {
+            .filter(event -> !event.isEmpty())
+            .flatMap(envelopeStr -> {
                 try {
                     MantisEventEnvelope envelope = mantisEventEnvelopeReader.readValue(envelopeStr);
                     return Observable.from(envelope.getEventList())
-                        .map((event) -> event.getData());
+                        .map(MantisEvent::getData);
                 } catch (IOException e) {
                     LOGGER.error(e.getMessage());
                     // Could not parse just send it along.
@@ -84,7 +85,7 @@ public class EchoStage implements ScalarComputation<String, String> {
                 }
             })
             .map(this::insertSourceJobName)
-            .onErrorResumeNext((t1) -> {
+            .onErrorResumeNext(t1 -> {
                 LOGGER.error("Exception occurred in : " + clusterName + " error is " + t1.getMessage());
                 return Observable.empty();
             });

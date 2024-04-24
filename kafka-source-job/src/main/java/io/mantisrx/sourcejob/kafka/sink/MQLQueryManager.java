@@ -22,14 +22,14 @@ import java.util.concurrent.ConcurrentHashMap;
 import io.mantisrx.mql.jvm.core.Query;
 
 
-public class MQLQueryManager {
+public final class MQLQueryManager {
 
     static class LazyHolder {
 
         private static final MQLQueryManager INSTANCE = new MQLQueryManager();
     }
 
-    private ConcurrentHashMap<String, Query> queries = new ConcurrentHashMap<>();
+    private final ConcurrentHashMap<String, Query> queries = new ConcurrentHashMap<>();
 
     public static MQLQueryManager getInstance() {
         return LazyHolder.INSTANCE;
